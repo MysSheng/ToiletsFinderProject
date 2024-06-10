@@ -1,20 +1,11 @@
 package com.JavaFinal.ToiletsFinder.Controllers;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-import com.JavaFinal.ToiletsFinder.models.locationModel;
 import com.JavaFinal.ToiletsFinder.models.userInput;
 import com.opencagedata.jopencage.JOpenCageGeocoder;
 import com.opencagedata.jopencage.model.JOpenCageForwardRequest;
@@ -26,17 +17,10 @@ public class Controllers {
 	@GetMapping("/lc")
 	public String Location(Model model) {
 		System.out.println("GET lc");
-		return "index";
+		return "lc";
 	}
 	
-	//could implement this func with a @RestController to have it's values returned. 
-	@PostMapping(value = "/lc", consumes = "application/json")
-	public String UserLocation(@RequestBody locationModel location) {
-		System.out.println("POST lc");
-		System.out.println(location.getLongitude());
-		System.out.println(location.getLatitude());
-		return "index";
-	}
+	//could implement this func with a @RestController to have it's values returned.
 	
 	@GetMapping("/keyword")
 	public String Keyword(Model model) {
@@ -59,6 +43,7 @@ public class Controllers {
 		System.out.println(response.getFirstPosition().getLng());
 		model.addAttribute("userinput", new userInput());
 		model.addAttribute("searchResult", "founded");
-		return "keyword";
+		return "mainpage";
 	}
+
 }
