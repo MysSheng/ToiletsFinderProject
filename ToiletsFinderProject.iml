@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module type="JAVA_MODULE" version="4">
-  <component name="NewModuleRootManager">
-    <output url="file://$MODULE_DIR$/bin" />
-    <exclude-output />
+<module version="4">
+  <component name="AdditionalModuleElements">
     <content url="file://$MODULE_DIR$" />
-    <orderEntry type="jdk" jdkName="21" jdkType="JavaSDK" />
-    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+  <component name="FacetManager">
+    <facet type="jpa" name="JPA">
+      <configuration>
+        <setting name="validation-enabled" value="true" />
+        <setting name="provider-name" value="Hibernate" />
+        <datasource-mapping>
+          <factory-entry name="entityManagerFactory" value="a353b229-0d4d-4243-a43d-13c250576bbd" />
+        </datasource-mapping>
+        <naming-strategy-map />
+      </configuration>
+    </facet>
   </component>
 </module>
