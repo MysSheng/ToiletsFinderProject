@@ -5,7 +5,7 @@ import java.util.Comparator;
 import java.util.List;
 
 public class DistanceOperation {
-	public double getDistance(Location location1,Location location2) {
+	public double getDistance(Location location1, Location location2) {
 		double longitude1=location1.getLongitude();
 		double longitude2=location2.getLongitude();
 		double latitude1=location1.getLatitude();

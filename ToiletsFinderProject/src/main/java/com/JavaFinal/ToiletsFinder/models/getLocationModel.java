@@ -5,8 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class getLocationModel {
 	private double longitude;
 	private double latitude;
-	private String country;
-	private String subDistrict;
+	private String countryCode;
+	private String principalSubdivision;
 	private String locality;
 	
 	public double getLongitude() {
@@ -22,6 +22,14 @@ public class getLocationModel {
 		this.latitude = latutide;
 	}
 
+	public String getPrincipalSubdivision() {
+		return principalSubdivision;
+	}
+
+	public void setPrincipalSubdivision(String principalSubdivision) {
+		this.principalSubdivision = principalSubdivision;
+	}
+
 	public String getLocality() {
 		return locality;
 	}
@@ -30,19 +38,11 @@ public class getLocationModel {
 		this.locality = locality;
 	}
 
-	public String getCountry() {
-		return country;
+	public String getCountryCode() {
+		return countryCode;
 	}
 
-	public void setCountry(String country) {
-		this.country = country;
-	}
-
-	public String getSubDistrict() {
-		return subDistrict;
-	}
-
-	public void setSubDistrict(String subDistrict) {
-		this.subDistrict = subDistrict;
+	public void setCountryCode(String countryCode) {
+		this.countryCode = countryCode;
 	}
 }
