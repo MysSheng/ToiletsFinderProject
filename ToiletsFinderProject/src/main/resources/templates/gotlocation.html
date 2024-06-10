@@ -64,11 +64,11 @@
       width: 100%;
       border-collapse: separate; /* Allows for border radius on tables */
       background-color: #121212; /* Very dark grey for table */
-      overflow-x: auto;
       display: block;
       border: 1px solid #555; /* Subtle border for the table */
       border-radius: 8px; /* Rounded corners for the table */
       margin-bottom: 1em; /* Adds space below the table */
+      table-layout: fixed; /* Ensures columns take up available space evenly */
     }
     th, td {
       border: 1px solid #444; /* Dark border for table cells, less prominent */
@@ -76,6 +76,9 @@
       text-align: left;
       background-color: #222; /* Slightly lighter dark grey for cells */
       color: #e0e0e0; /* Light grey text */
+      white-space: nowrap; /* Prevents wrapping of table cell content */
+      overflow: hidden; /* Ensures no overflow of table cell content */
+      text-overflow: ellipsis; /* Shows ellipsis (...) when content is clipped */
     }
     th {
       background-color: #333; /* Dark grey for headers */
@@ -150,10 +153,11 @@
   </style>
   <!-- get user location script -->
   <script type="text/javascript" th:src="@{/js/getUserLocation.js}"></script>
+  <script type="text/javascript" th:src="@{/js/redirects.js}"></script>
 </head>
 <body>
 <div class="container">
-  <h1>Got it!</h1>
+  <h1 th:text="${searchResult}"></h1>
   <div class="info">
     <h1>You are in:</h1>
     <h1 th:text="@{${country} + ','}"></h1>
@@ -168,18 +172,21 @@
       <thead>
       <tr>
         <th scope="col">Name</th>
-        <th scope="col">Distance (km)</th>
-        <th scope="col">Gender?</th>
+        <th scope="col">Distance (meter)</th>
+        <th scope="col">Free?</th>
         <th scope="col">Comment</th>
+        <th scope="col">Link</th>
       </tr>
       </thead>
       <tbody>
-      <tbody>
       <tr th:each="toilet : ${toilets}">
         <td th:text="${toilet.name}"></td>
-        <td th:text="${toilet.disabledFriendly}"></td>
-        <td th:text="${toilet.free}"></td>
+        <td th:text="${toilet.distance}"></td>
+        <td th:text="${toilet.isFree}"></td>
         <td th:text="${toilet.comment}"></td>
+        <td>
+          <a th:href="${toilet.link}" target="_blank">google map</a>
+        </td>
       </tr>
       </tbody>
     </table>
@@ -187,6 +194,9 @@
 </div>
 <div class="button-container">
   <button type="button" onclick="findMyLocation()">search again</button>
+</div>
+<div class="button-container">
+  <button type="button" onclick="mainpage()">back</button>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>

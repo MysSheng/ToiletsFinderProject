@@ -96,4 +96,10 @@ public class Location {
         latitude = lat;
         name = "user";
     }
+
+    public Location(double lng, double lat, String name) {
+        longitude = lng;
+        latitude = lat;
+        this.name = name;
+    }
 }
