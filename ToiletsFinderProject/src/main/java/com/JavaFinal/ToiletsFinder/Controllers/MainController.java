@@ -26,6 +26,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.JavaFinal.ToiletsFinder.DistanceOperation;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -69,6 +70,8 @@ public class MainController {
         model.addAttribute("locality", userLocation.getLocality());
 
         Location user = new Location(userLocation.getLongitude(), userLocation.getLatitude());
+        //System.out.println(userLocation.getLongitude()+","+userLocation.getLatitude());
+        //System.out.println(user.getLongitude()+","+user.getLatitude());
         List<Location> toilets = SQLOperations.getAlllocations();
         DistanceOperation d = new DistanceOperation();
         d.sortByDistance(user,toilets);
@@ -76,14 +79,16 @@ public class MainController {
         List<tableCol> tableDatas = new ArrayList<>();
         for (Location l : toilets) {
             tableCol td = new tableCol();
-            td.setDistance(d.getDistance(user,l));
+            DecimalFormat df = new DecimalFormat();
+            df.setMaximumFractionDigits(2);
+            td.setDistance(String.format("%.2f",d.getDistance(user,l)));
             td.setComment(l.getComment());
             if (l.isFree()){
                 td.setIsFree("yes");
             } else td.setIsFree("no");
             td.setName(l.getName());
             tableDatas.add(td);
-            td.setLink("http://maps.google.com/maps?q="+l.getLongitude()+","+l.getLatitude());
+            td.setLink("http://maps.google.com/maps?q="+l.getLatitude()+","+l.getLongitude());
         }
         model.addAttribute("toilets", tableDatas);
         return "gotlocation";
@@ -134,14 +139,14 @@ public class MainController {
         List<tableCol> tableDatas = new ArrayList<>();
         for (Location l : toilets) {
             tableCol td = new tableCol();
-            td.setDistance(d.getDistance(user,l));
+            td.setDistance(String.format("%.2f",d.getDistance(user,l)));
             td.setComment(l.getComment());
             if (l.isFree()){
                 td.setIsFree("yes");
             } else td.setIsFree("no");
             td.setName(l.getName());
             tableDatas.add(td);
-            td.setLink("http://maps.google.com/maps?q="+l.getLongitude()+","+l.getLatitude());
+            td.setLink("http://maps.google.com/maps?q="+l.getLatitude()+","+l.getLongitude());
         }
         model.addAttribute("country", userLocation.getcountryName());
         model.addAttribute("subdiv", userLocation.getPrincipalSubdivision());

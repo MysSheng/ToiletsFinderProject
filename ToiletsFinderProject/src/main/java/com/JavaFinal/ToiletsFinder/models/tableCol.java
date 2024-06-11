@@ -1,17 +1,17 @@
 package com.JavaFinal.ToiletsFinder.models;
 
 public class tableCol {
-    public double distance;
+    public String distance;
     public String name;
     public String isFree;
     public String comment;
     public String link;
 
-    public double getDistance() {
+    public String getDistance() {
         return distance;
     }
 
-    public void setDistance(double distance) {
+    public void setDistance(String distance) {
         this.distance = distance;
     }
 
@@ -48,7 +48,7 @@ public class tableCol {
     }
 
     public tableCol() {
-        distance = 0;
+        distance = "";
         name = "";
         isFree = "";
         comment = "";
