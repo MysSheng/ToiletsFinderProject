@@ -2,17 +2,28 @@ package com.JavaFinal.ToiletsFinder.Controllers;
 
 import com.JavaFinal.ToiletsFinder.Location;
 import com.JavaFinal.ToiletsFinder.models.getLocationModel;
+import com.JavaFinal.ToiletsFinder.models.tableCol;
 import com.JavaFinal.ToiletsFinder.models.userInput;
+import com.opencagedata.jopencage.JOpenCageGeocoder;
+import com.opencagedata.jopencage.model.JOpenCageForwardRequest;
+import com.opencagedata.jopencage.model.JOpenCageResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import com.JavaFinal.ToiletsFinder.DistanceOperation;
+import com.JavaFinal.ToiletsFinder.Location;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class MainController {
 
-    private Location user;
+    private getLocationModel userLocation = new getLocationModel();
 
     @GetMapping("/mainpage")
     public String Welcome() {
@@ -23,9 +34,115 @@ public class MainController {
     @PostMapping(value = "/lc", consumes = "application/json")
     public String UserLocation(@RequestBody getLocationModel location, Model model) {
         System.out.println("POST lc");
-        user = new Location(location.getLongitude(), location.getLatitude());
-        model.addAttribute("", new userInput());
-        model.addAttribute("searchResult", "founded");
+        userLocation.setLongitude(location.getLongitude());
+        userLocation.setLatitude(location.getLatitude());
+        userLocation.setCountryCode(location.getCountryCode());
+        userLocation.setPrincipalSubdivision(location.getPrincipalSubdivision());
+        userLocation.setLocality(location.getLocality());
         return "gotlocation";
+    }
+
+    @GetMapping("/gotlocation")
+    public String gotlocation(Model model) {
+        System.out.println("GET location");
+        model.addAttribute("country", userLocation.getCountryCode());
+        model.addAttribute("subdiv", userLocation.getPrincipalSubdivision());
+        model.addAttribute("locality", userLocation.getLocality());
+
+        Location user = new Location(userLocation.getLongitude(), userLocation.getLatitude());
+        List<Location> toilets = new ArrayList<>();
+        Location l1 = new Location(122,50,"close");
+        Location l2 = new Location(122,60,"far");
+
+        toilets.add(l2);
+        toilets.add(l1);
+
+        DistanceOperation d = new DistanceOperation();
+        d.sortByDistance(user,toilets);
+
+        List<tableCol> tableDatas = new ArrayList<>();
+        for (Location l : toilets) {
+            tableCol td = new tableCol();
+            td.setDistance(d.getDistance(user,l));
+            td.setComment(l.getComment());
+            if (l.isFree()){
+                td.setIsFree("yes");
+            } else td.setIsFree("no");
+            td.setName(l.getName());
+            tableDatas.add(td);
+            td.setLink("http://maps.google.com/maps?q="+l.getLatitude()+","+l.getLongitude());
+        }
+        model.addAttribute("toilets", tableDatas);
+        return "gotlocation";
+    }
+
+    @GetMapping("/keyword")
+    public String KeywordSearch(Model model) {
+        System.out.println("GET keyword");
+        model.addAttribute("country", "");
+        model.addAttribute("subdiv", "");
+        model.addAttribute("locality", "");
+        model.addAttribute("userinput", new userInput());
+        return "keywordLocation";
+    }
+
+    @PostMapping("/keyword")
+    public String SearchComplete(@ModelAttribute userInput input, Model model) {
+        System.out.println(input.getMessage());
+
+        JOpenCageGeocoder jOpenCageGeocoder = new JOpenCageGeocoder("7cdbdb52bb3243bb8a8160beec3c709a");
+
+        JOpenCageForwardRequest request = new JOpenCageForwardRequest(input.getMessage());
+        request.setMinConfidence(1);
+        request.setNoAnnotations(false);
+        request.setNoDedupe(true);
+        JOpenCageResponse response = jOpenCageGeocoder.forward(request);
+        if (response == null){
+            model.addAttribute("country", "");
+            model.addAttribute("subdiv", "");
+            model.addAttribute("locality", "");
+            model.addAttribute("userinput", new userInput());
+            model.addAttribute("searchResult", "Not found...!");
+            return "/keywordLocation";
+        }
+        System.out.println(response.getFirstPosition().getLat());
+        System.out.println(response.getFirstPosition().getLng());
+        userLocation.setLatitude(response.getFirstPosition().getLat());
+        userLocation.setLongitude(response.getFirstPosition().getLng());
+        userLocation.setPrincipalSubdivision(response.getFirstComponents().getCity());
+        userLocation.setLocality(response.getFirstComponents().getNeighbourhood());
+        userLocation.setCountryCode(response.getFirstComponents().getCountryCode());
+
+        Location user = new Location(userLocation.getLongitude(), userLocation.getLatitude());
+        List<Location> toilets = new ArrayList<>();
+        Location l1 = new Location(122,50,"close");
+        Location l2 = new Location(122,60,"far");
+
+        toilets.add(l2);
+        toilets.add(l1);
+
+        DistanceOperation d = new DistanceOperation();
+        d.sortByDistance(user,toilets);
+
+        List<tableCol> tableDatas = new ArrayList<>();
+        for (Location l : toilets) {
+            tableCol td = new tableCol();
+            td.setDistance(d.getDistance(user,l));
+            td.setComment(l.getComment());
+            if (l.isFree()){
+                td.setIsFree("yes");
+            } else td.setIsFree("no");
+            td.setName(l.getName());
+            tableDatas.add(td);
+            td.setLink("http://maps.google.com/maps?q="+l.getLatitude()+","+l.getLongitude());
+        }
+        model.addAttribute("country", userLocation.getCountryCode());
+        model.addAttribute("subdiv", userLocation.getPrincipalSubdivision());
+        model.addAttribute("locality", userLocation.getLocality());
+        model.addAttribute("toilets", tableDatas);
+        model.addAttribute("userinput", new userInput());
+        model.addAttribute("searchResult", "Got it!");
+        System.out.println("here");
+        return "/keywordLocation";
     }
 }

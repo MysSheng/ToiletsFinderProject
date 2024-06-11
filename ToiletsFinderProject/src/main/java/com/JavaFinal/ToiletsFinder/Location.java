@@ -1,8 +1,8 @@
 package com.JavaFinal.ToiletsFinder;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-
 
 public class Location {
     private double longitude;
@@ -90,9 +90,16 @@ public class Location {
         isDisabledFriendly = disabledFriendly;
     }
 
+
     public Location(double lng, double lat) {
         longitude = lng;
         latitude = lat;
         name = "user";
+    }
+
+    public Location(double lng, double lat, String name) {
+        longitude = lng;
+        latitude = lat;
+        this.name = name;
     }
 }

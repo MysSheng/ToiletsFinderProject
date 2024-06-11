@@ -22,13 +22,13 @@ public class Controllers {
 	
 	//could implement this func with a @RestController to have it's values returned.
 	
-	@GetMapping("/keyword")
+	@GetMapping("/keywords")
 	public String Keyword(Model model) {
 		System.out.println("GET keyword");
 		model.addAttribute("userinput", new userInput());
 		return "keyword";
 	}
-	@PostMapping("/keyword")
+	@PostMapping("/keywords")
 	public String SearchResult(@ModelAttribute userInput input, Model model) {
 		System.out.println(input.getMessage());
 		
