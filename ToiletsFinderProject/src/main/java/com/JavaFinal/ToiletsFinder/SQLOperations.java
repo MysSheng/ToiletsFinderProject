@@ -58,7 +58,7 @@ public class SQLOperations{
                 boolean isGenderFriendly = resultSet.getBoolean("isGenderFriendly");
                 boolean isDisabledFriendly = resultSet.getBoolean("isDisabledFriendly");
 
-                Location l = new Location(longitude, latitude, name, comment, isFree, floor, accessibility, isGenderFriendly, isDisabledFriendly);
+                Location l = new Location(latitude, longitude, name, comment, isFree, floor, accessibility, isGenderFriendly, isDisabledFriendly);
                 retLocations.add(l);
             }
             return retLocations;

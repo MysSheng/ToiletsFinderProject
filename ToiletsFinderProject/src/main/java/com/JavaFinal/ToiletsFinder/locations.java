@@ -7,7 +7,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-public class Location {
+public class locations {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -96,20 +96,7 @@ public class Location {
         isDisabledFriendly = disabledFriendly;
     }
 
-
-    public Location(double lng, double lat) {
-        longitude = lng;
-        latitude = lat;
-        name = "user";
-    }
-
-    public Location(double lng, double lat, String name) {
-        longitude = lng;
-        latitude = lat;
-        this.name = name;
-    }
-
-    public Location(double lat, double lng, String name, String comment, boolean isFree, int floor, boolean accessibility, boolean isGenderFriendly, boolean isDisabledFriendly) {
+    public locations(double lat, double lng, String name, String comment, boolean isFree, int floor, boolean accessibility, boolean isGenderFriendly, boolean isDisabledFriendly) {
         this.latitude = lat;
         this.longitude = lng;
         this.name = name;
@@ -121,3 +108,4 @@ public class Location {
         this.isGenderFriendly = isGenderFriendly;
     }
 }
+
