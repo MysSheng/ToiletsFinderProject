@@ -5,6 +5,10 @@ function keywordLocation(){
     window.location.replace("/keyword");
 }
 
-function Upload() {
-    window.location.replace("/upload");
+function Update() {
+    window.location.replace("/update");
+}
+
+function Hello(){
+    window.location.replace("/hello");
 }
