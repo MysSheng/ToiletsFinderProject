@@ -1,6 +1,6 @@
 package com.JavaFinal.ToiletsFinder.Controllers;
 
-import com.JavaFinal.ToiletsFinder.SQLOperatrions;
+import com.JavaFinal.ToiletsFinder.SQLOperations;
 import com.JavaFinal.ToiletsFinder.Location;
 import com.JavaFinal.ToiletsFinder.models.getLocationModel;
 import com.JavaFinal.ToiletsFinder.models.tableCol;
@@ -54,7 +54,7 @@ public class MainController {
         model.addAttribute("locality", userLocation.getLocality());
 
         Location user = new Location(userLocation.getLongitude(), userLocation.getLatitude());
-        List<Location> toilets = SQLOperatrions.GetAll();
+        List<Location> toilets = SQLOperations.getAlllocations();
         DistanceOperation d = new DistanceOperation();
         d.sortByDistance(user,toilets);
 
@@ -68,7 +68,7 @@ public class MainController {
             } else td.setIsFree("no");
             td.setName(l.getName());
             tableDatas.add(td);
-            td.setLink("http://maps.google.com/maps?q="+l.getLatitude()+","+l.getLongitude());
+            td.setLink("http://maps.google.com/maps?q="+l.getLongitude()+","+l.getLatitude());
         }
         model.addAttribute("toilets", tableDatas);
         return "gotlocation";
@@ -95,7 +95,7 @@ public class MainController {
         request.setNoAnnotations(false);
         request.setNoDedupe(true);
         JOpenCageResponse response = jOpenCageGeocoder.forward(request);
-        if (response == null){
+        if (response.getFirstPosition() == null){
             model.addAttribute("country", "");
             model.addAttribute("subdiv", "");
             model.addAttribute("locality", "");
@@ -112,7 +112,7 @@ public class MainController {
         userLocation.setCountryName(response.getFirstComponents().getCountry());
 
         Location user = new Location(userLocation.getLongitude(), userLocation.getLatitude());
-        List<Location> toilets = SQLOperatrions.GetAll();
+        List<Location> toilets = SQLOperations.getAlllocations();
         DistanceOperation d = new DistanceOperation();
         d.sortByDistance(user,toilets);
 
@@ -126,7 +126,7 @@ public class MainController {
             } else td.setIsFree("no");
             td.setName(l.getName());
             tableDatas.add(td);
-            td.setLink("http://maps.google.com/maps?q="+l.getLatitude()+","+l.getLongitude());
+            td.setLink("http://maps.google.com/maps?q="+l.getLongitude()+","+l.getLatitude());
         }
         model.addAttribute("country", userLocation.getcountryName());
         model.addAttribute("subdiv", userLocation.getPrincipalSubdivision());
@@ -136,5 +136,10 @@ public class MainController {
         model.addAttribute("searchResult", "Got it!");
         System.out.println("here");
         return "/keywordLocation";
+    }
+
+    @GetMapping("/upload")
+    public String uploadPage(){
+        return "upload";
     }
 }

@@ -4,3 +4,7 @@ function mainpage() {
 function keywordLocation(){
     window.location.replace("/keyword");
 }
+
+function Upload() {
+    window.location.replace("/upload");
+}

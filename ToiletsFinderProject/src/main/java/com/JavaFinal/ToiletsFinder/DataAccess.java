@@ -1,6 +1,9 @@
 package com.JavaFinal.ToiletsFinder;
 
+import java.util.List;
+
 public interface DataAccess {
+
     void createDatabase();
     void useDatabase();
     void createTable();
@@ -8,5 +11,5 @@ public interface DataAccess {
     void updateLocation(Location location);
     void deleteLocation(Location location);
     Location getLocation(Location location);
-    Location[] getAllLocations();
+    List<Location> getAllLocations();
 }

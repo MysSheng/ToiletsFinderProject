@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-public class SQLOperatrions {
-    public static List<Location> GetAll() {
+public class SQLOperations{
+    public static List<Location> getAlllocations() {
         Properties properties = new Properties();
         try (InputStream input = ToiletUpdateUpload.class.getClassLoader().getResourceAsStream("db.properties")) {
             if (input == null) {
@@ -78,4 +78,5 @@ public class SQLOperatrions {
         }
         return null;
     }
+
 }
