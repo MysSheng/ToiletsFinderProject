@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Form</title>
+    <script type="text/javascript" th:src="@{js/redirects.js}"></script>
+    <script>
+        function validateForm() {
+            var longitude = document.getElementById("longitude").value;
+            var latitude = document.getElementById("latitude").value;
+            var name = document.getElementById("name").value;
+            var free = document.getElementById("free").value;
+            var comment = document.getElementById("comment").value;
+
+            if (!longitude || !latitude || !name || !free || !comment) {
+                alert("All fields are required!");
+                return false;
+            }
+            return true;
+        }
+
+        function showMessage(success) {
+            if (success) {
+                alert("Location successfully created!");
+            } else {
+                alert("Location successfully created!");
+            }
+        }
+
+        function submitForm(event) {
+            event.preventDefault(); // Prevent the form from submitting the traditional way
+
+            if (validateForm()) {
+                var form = document.getElementById("locationForm");
+                var formData = new FormData(form);
+
+                fetch(form.action, {
+                    method: form.method,
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    showMessage(data.success);
+                    if (data.success) {
+                        form.reset(); // Reset the form after successful submission
+                    }
+                })
+                .catch(error => {
+                    showMessage(false);
+                });
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 2em;
+            background-color: #000; /* Pure black background for the body */
+            color: #fff; /* Pure white for text */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            border: 2px solid #fff;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #444;
+            width: 500px; /* Fixed width */
+            box-sizing: border-box; /* Ensures padding and border are included in the width */
+            margin-bottom: 30px; /* Increased space between containers */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container h1 {
+            font-size: 24px;
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        input[type="text"] {
+            width: 40%;
+            padding: 8px;
+            margin-bottom: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            margin: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, box-shadow 0.3s;
+            width: 200px; /* Fixed width for buttons */
+            height: 50px; /* Fixed height for buttons */
+            box-sizing: border-box; /* Ensures padding is included in the width */
+        }
+
+        button:hover {
+            background-color: #0056b3;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        } 
+    </style>
+</head>
+<body>
+    <div class="container">
+        <form id="locationForm" action="/submitLocation" method="POST"  onsubmit="submitForm(event)">
+            <label for="longitude">Longitude:</label>
+            <input type="text" id="longitude" name="longitude" required>
+            <br>
+            <label for="latitude">Latitude:</label>
+            <input type="text" id="latitude" name="latitude" required>
+            <br>
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+            <br>
+            <label for="free">Free:</label>
+            <input type="text" id="free" name="free" required>
+            <br>
+            <label for="comment">Comment:</label>
+            <input type="text" id="comment" name="comment" required>
+            <br>
+            <button type="submit"onclick=mainpage()>Update</button>
+        </form>
+    </div>
+</body>
+</html>
