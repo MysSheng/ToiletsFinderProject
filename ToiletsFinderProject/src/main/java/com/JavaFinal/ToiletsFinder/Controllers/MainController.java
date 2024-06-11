@@ -1,5 +1,6 @@
 package com.JavaFinal.ToiletsFinder.Controllers;
 
+import com.JavaFinal.ToiletsFinder.SQLOperations;
 import com.JavaFinal.ToiletsFinder.Location;
 import com.JavaFinal.ToiletsFinder.models.getLocationModel;
 import com.JavaFinal.ToiletsFinder.models.tableCol;
@@ -7,7 +8,6 @@ import com.JavaFinal.ToiletsFinder.models.userInput;
 import com.opencagedata.jopencage.JOpenCageGeocoder;
 import com.opencagedata.jopencage.model.JOpenCageForwardRequest;
 import com.opencagedata.jopencage.model.JOpenCageResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import com.JavaFinal.ToiletsFinder.DistanceOperation;
-import com.JavaFinal.ToiletsFinder.Location;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 public class MainController {
@@ -36,7 +36,7 @@ public class MainController {
         System.out.println("POST lc");
         userLocation.setLongitude(location.getLongitude());
         userLocation.setLatitude(location.getLatitude());
-        userLocation.setCountryCode(location.getCountryCode());
+        userLocation.setCountryName(location.getcountryName());
         userLocation.setPrincipalSubdivision(location.getPrincipalSubdivision());
         userLocation.setLocality(location.getLocality());
         return "gotlocation";
@@ -45,18 +45,16 @@ public class MainController {
     @GetMapping("/gotlocation")
     public String gotlocation(Model model) {
         System.out.println("GET location");
-        model.addAttribute("country", userLocation.getCountryCode());
+        if (Objects.equals(userLocation.getcountryName(), "Taiwan (Province of China)")) {
+            model.addAttribute("country", "Taiwan");
+        } else {
+            model.addAttribute("country", userLocation.getcountryName());
+        }
         model.addAttribute("subdiv", userLocation.getPrincipalSubdivision());
         model.addAttribute("locality", userLocation.getLocality());
 
         Location user = new Location(userLocation.getLongitude(), userLocation.getLatitude());
-        List<Location> toilets = new ArrayList<>();
-        Location l1 = new Location(122,50,"close");
-        Location l2 = new Location(122,60,"far");
-
-        toilets.add(l2);
-        toilets.add(l1);
-
+        List<Location> toilets = SQLOperations.getAlllocations();
         DistanceOperation d = new DistanceOperation();
         d.sortByDistance(user,toilets);
 
@@ -70,7 +68,7 @@ public class MainController {
             } else td.setIsFree("no");
             td.setName(l.getName());
             tableDatas.add(td);
-            td.setLink("http://maps.google.com/maps?q="+l.getLatitude()+","+l.getLongitude());
+            td.setLink("http://maps.google.com/maps?q="+l.getLongitude()+","+l.getLatitude());
         }
         model.addAttribute("toilets", tableDatas);
         return "gotlocation";
@@ -97,7 +95,7 @@ public class MainController {
         request.setNoAnnotations(false);
         request.setNoDedupe(true);
         JOpenCageResponse response = jOpenCageGeocoder.forward(request);
-        if (response == null){
+        if (response.getFirstPosition() == null){
             model.addAttribute("country", "");
             model.addAttribute("subdiv", "");
             model.addAttribute("locality", "");
@@ -111,16 +109,10 @@ public class MainController {
         userLocation.setLongitude(response.getFirstPosition().getLng());
         userLocation.setPrincipalSubdivision(response.getFirstComponents().getCity());
         userLocation.setLocality(response.getFirstComponents().getNeighbourhood());
-        userLocation.setCountryCode(response.getFirstComponents().getCountryCode());
+        userLocation.setCountryName(response.getFirstComponents().getCountry());
 
         Location user = new Location(userLocation.getLongitude(), userLocation.getLatitude());
-        List<Location> toilets = new ArrayList<>();
-        Location l1 = new Location(122,50,"close");
-        Location l2 = new Location(122,60,"far");
-
-        toilets.add(l2);
-        toilets.add(l1);
-
+        List<Location> toilets = SQLOperations.getAlllocations();
         DistanceOperation d = new DistanceOperation();
         d.sortByDistance(user,toilets);
 
@@ -134,9 +126,9 @@ public class MainController {
             } else td.setIsFree("no");
             td.setName(l.getName());
             tableDatas.add(td);
-            td.setLink("http://maps.google.com/maps?q="+l.getLatitude()+","+l.getLongitude());
+            td.setLink("http://maps.google.com/maps?q="+l.getLongitude()+","+l.getLatitude());
         }
-        model.addAttribute("country", userLocation.getCountryCode());
+        model.addAttribute("country", userLocation.getcountryName());
         model.addAttribute("subdiv", userLocation.getPrincipalSubdivision());
         model.addAttribute("locality", userLocation.getLocality());
         model.addAttribute("toilets", tableDatas);
@@ -144,5 +136,10 @@ public class MainController {
         model.addAttribute("searchResult", "Got it!");
         System.out.println("here");
         return "/keywordLocation";
+    }
+
+    @GetMapping("/upload")
+    public String uploadPage(){
+        return "upload";
     }
 }

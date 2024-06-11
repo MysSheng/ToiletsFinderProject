@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class getLocationModel {
 	private double longitude;
 	private double latitude;
-	private String countryCode;
+	private String countryName;
 	private String principalSubdivision;
 	private String locality;
 	
@@ -38,11 +38,11 @@ public class getLocationModel {
 		this.locality = locality;
 	}
 
-	public String getCountryCode() {
-		return countryCode;
+	public String getcountryName() {
+		return countryName;
 	}
 
-	public void setCountryCode(String countryCode) {
-		this.countryCode = countryCode;
+	public void setCountryName(String countryCode) {
+		this.countryName = countryCode;
 	}
 }
