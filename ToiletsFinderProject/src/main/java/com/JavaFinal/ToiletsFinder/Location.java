@@ -102,4 +102,16 @@ public class Location {
         latitude = lat;
         this.name = name;
     }
+
+    public Location(double lat, double lng, String name, String comment, boolean isFree, int floor, boolean accessibility, boolean isGenderFriendly, boolean isDisabledFriendly) {
+        latitude = lat;
+        longitude = lng;
+        this.name = name;
+        this.comment = comment;
+        this.isFree = isFree;
+        this.floor = floor;
+        this.accessibility = accessibility;
+        this.isDisabledFriendly = isDisabledFriendly;
+        this.isGenderFriendly = isGenderFriendly;
+    }
 }

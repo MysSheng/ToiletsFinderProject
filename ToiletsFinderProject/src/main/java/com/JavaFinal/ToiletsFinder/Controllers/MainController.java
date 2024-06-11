@@ -1,5 +1,6 @@
 package com.JavaFinal.ToiletsFinder.Controllers;
 
+import com.JavaFinal.ToiletsFinder.SQLOperatrions;
 import com.JavaFinal.ToiletsFinder.Location;
 import com.JavaFinal.ToiletsFinder.models.getLocationModel;
 import com.JavaFinal.ToiletsFinder.models.tableCol;
@@ -50,13 +51,7 @@ public class MainController {
         model.addAttribute("locality", userLocation.getLocality());
 
         Location user = new Location(userLocation.getLongitude(), userLocation.getLatitude());
-        List<Location> toilets = new ArrayList<>();
-        Location l1 = new Location(122,50,"close");
-        Location l2 = new Location(122,60,"far");
-
-        toilets.add(l2);
-        toilets.add(l1);
-
+        List<Location> toilets = SQLOperatrions.GetAll();
         DistanceOperation d = new DistanceOperation();
         d.sortByDistance(user,toilets);
 
@@ -111,16 +106,10 @@ public class MainController {
         userLocation.setLongitude(response.getFirstPosition().getLng());
         userLocation.setPrincipalSubdivision(response.getFirstComponents().getCity());
         userLocation.setLocality(response.getFirstComponents().getNeighbourhood());
-        userLocation.setCountryCode(response.getFirstComponents().getCountryCode());
+        userLocation.setCountryCode(response.getFirstComponents().getCountry());
 
         Location user = new Location(userLocation.getLongitude(), userLocation.getLatitude());
-        List<Location> toilets = new ArrayList<>();
-        Location l1 = new Location(122,50,"close");
-        Location l2 = new Location(122,60,"far");
-
-        toilets.add(l2);
-        toilets.add(l1);
-
+        List<Location> toilets = SQLOperatrions.GetAll();
         DistanceOperation d = new DistanceOperation();
         d.sortByDistance(user,toilets);
 
