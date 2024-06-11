@@ -73,7 +73,7 @@ public class MainController {
             } else td.setIsFree("no");
             td.setName(l.getName());
             tableDatas.add(td);
-            td.setLink("http://maps.google.com/maps?q="+l.getLongitude()+","+l.getLatitude());
+            td.setLink("http://maps.google.com/maps?q="+l.getLatitude()+","+l.getLongitude());
         }
         model.addAttribute("toilets", tableDatas);
         return "gotlocation";
@@ -131,7 +131,7 @@ public class MainController {
             } else td.setIsFree("no");
             td.setName(l.getName());
             tableDatas.add(td);
-            td.setLink("http://maps.google.com/maps?q="+l.getLongitude()+","+l.getLatitude());
+            td.setLink("http://maps.google.com/maps?q="+l.getLatitude()+","+l.getLongitude());
         }
         model.addAttribute("country", userLocation.getcountryName());
         model.addAttribute("subdiv", userLocation.getPrincipalSubdivision());
